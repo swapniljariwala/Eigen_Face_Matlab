@@ -134,23 +134,16 @@ end
             facebox = step(faceDetector,inp_image);
             Nface=size(facebox,1);
     if (Nface>0)
+        longest = (facebox(1,1) - facebox(1,3)) + (facebox(1,2) - facebox(1,4));
+        facebox_max = facebox(1,:);
         for n=1:Nface
-                
-    %                 figure,imshow(inp_image); hold on
-    %                 rectangle('position',facebox(1,:),'LineWidth',5,'LineStyle','-','EdgeColor','b');              
-    %                     title('Face Detection')
-    %                     hold off;        
-            Face_im=imcrop(inp_image,facebox(n,:));
-
-    %                 figure,imshow(Face_im); 
-
-            %  figure,imshow(inp_image); hold on
-             rectangle('Parent',handles.axes1,'position',facebox(n,:),'LineWidth',5,'LineStyle','-','EdgeColor','b');              
-    %                     title('Face Detection')
-    %                      hold off;  
-            imshow(Face_im,'Parent',handles.axes2);
-
-            I=Face_im;
+            %rectangle('position',facebox(n,:),'LineWidth',5,'LineStyle','-','EdgeColor','b');
+            if ((facebox(n,1) - facebox(n,3)) + (facebox(n,2) - facebox(n,4)) > longest)
+                longest = (facebox(n,1) - facebox(n,3)) + (facebox(n,2) - facebox(n,4))
+                facebox_max = facebox(n,:);
+            end
+        end
+            I = imcrop(inp_image,facebox_max);
 
             I = imresize(I,[100 100]);
 
@@ -179,7 +172,7 @@ end
                     end
             %  message=sprintf('%s%s',message1,message2);
             % h=msgbox(message);
-        end
+        
     else
                 disp('No Face Detected!! Try again!!');
                set(handles.edit2, 'String', 'No Face Detected!! Try again!!');
