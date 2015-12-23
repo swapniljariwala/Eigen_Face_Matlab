@@ -35,11 +35,20 @@ while (1==1)
             facebox = step(faceDetector, I);
             Nface=size(facebox,1);
             if (Nface>0)
+                longest = (facebox(1,3) * facebox(1,4));
+                facebox_max = facebox(1,:);
+                for n=1:Nface
+                    %rectangle('Parent',handles.axes1,'position',facebox(n,:),'LineWidth',5,'LineStyle','-','EdgeColor','b'); 
+                    if ((facebox(n,3) * facebox(n,4)) > longest)
+                        longest = (facebox(n,3) * facebox(n,4))
+                        facebox_max = facebox(n,:);
+                    end
+                end
                 figure,imshow(I); hold on
-                rectangle('position',facebox(1,:),'LineWidth',5,'LineStyle','-','EdgeColor','b');              
+                rectangle('position',facebox_max,'LineWidth',5,'LineStyle','-','EdgeColor','b');              
                     title('Face Detection')
                     hold off;        
-                Face_im=imcrop(I,facebox(1,:));
+                Face_im=imcrop(I,facebox_max);
 %                 imresize(Face_im,s);
                 imwrite(Face_im,facefilename);
                 figure,imshow(Face_im);           
@@ -84,11 +93,20 @@ while (1==1)
             facebox = step(faceDetector, I);
             Nface=size(facebox,1);
             if (Nface>0)
+                longest = (facebox(1,3) * facebox(1,4));
+                facebox_max = facebox(1,:);
+                for n=1:Nface
+                    %rectangle('Parent',handles.axes1,'position',facebox(n,:),'LineWidth',5,'LineStyle','-','EdgeColor','b'); 
+                    if ((facebox(n,3) * facebox(n,4)) > longest)
+                        longest = (facebox(n,3) * facebox(n,4))
+                        facebox_max = facebox(n,:);
+                    end
+                end
                 figure,imshow(I); hold on
-                rectangle('position',facebox(1,:),'LineWidth',5,'LineStyle','-','EdgeColor','b');              
+                rectangle('position',facebox_max,'LineWidth',5,'LineStyle','-','EdgeColor','b');              
                     title('Face Detection')
                     hold off;        
-                Face_im=imcrop(I,facebox(1,:));
+                Face_im=imcrop(I,facebox_max);
                 imwrite(Face_im,facefilename);
                 figure,imshow(Face_im);           
                 

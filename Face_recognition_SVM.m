@@ -87,12 +87,17 @@ function face_rec_im_btn_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-
+cla(handles.axes2)
 identified_person='';
 trainingFeatures=[];
-people={'Dhiraj','Akshay','Prasad','Unknown'};
+%people={'Dhiraj','Akshay','Prasad','Unknown'};
 % people={'Dhiraj','Prasad','swapnil','Akshay'};
 TrainDatabasePath = strcat('Face_database');
+db_list = dir(TrainDatabasePath);
+people = {'Unknown'};
+for k = 3:size(db_list,1)
+    people = union(people, {db_list(k).name});
+end
 trainingLabels=[]; 
 labels=[];
 [m,A,Eigenfaces,trainfilenames,File_Numbers] = CreateDatabase(TrainDatabasePath,people);
@@ -134,17 +139,20 @@ end
             facebox = step(faceDetector,inp_image);
             Nface=size(facebox,1);
     if (Nface>0)
-        longest = (facebox(1,1) - facebox(1,3)) + (facebox(1,2) - facebox(1,4));
+        longest = (facebox(1,3) * facebox(1,4));
         facebox_max = facebox(1,:);
         for n=1:Nface
-            %rectangle('position',facebox(n,:),'LineWidth',5,'LineStyle','-','EdgeColor','b');
-            if ((facebox(n,1) - facebox(n,3)) + (facebox(n,2) - facebox(n,4)) > longest)
-                longest = (facebox(n,1) - facebox(n,3)) + (facebox(n,2) - facebox(n,4))
+            disp(n)
+            disp(facebox(n,:))
+            rectangle('Parent',handles.axes1,'position',facebox(n,:),'LineWidth',5,'LineStyle','-','EdgeColor','b'); 
+            if ((facebox(n,3) * facebox(n,4) > longest))
+                longest = facebox(n,3) * facebox(n,4)
                 facebox_max = facebox(n,:);
+                
             end
         end
             I = imcrop(inp_image,facebox_max);
-
+            imshow(I,'Parent',handles.axes2);
             I = imresize(I,[100 100]);
 
             temp =rgb2gray(I);
@@ -189,7 +197,11 @@ function face_rec_cam_btn_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 trainingFeatures=[];
-people={'Dhiraj','Prasad','Unknown','Akshay'};
+%people={'Dhiraj','Prasad','Unknown','Akshay'};
+people = {'Unknown'};
+for k = 3:size(db_list,1)
+    people = union(people, {db_list(k).name});
+end
 TrainDatabasePath = strcat('Face_database');
 trainingLabels=[]; 
 labels=[];
